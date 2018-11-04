@@ -8,7 +8,7 @@ module.exports = {
     // devtool: 'cheap-module-eval-source-map',
     entry: './src/index.js',
     output: {
-        path: path.join(__dirname,'/build'),
+        path: path.join(__dirname,'/dist'),
         filename: '[name].bundle.js',
         // publicPath: 'https://cdn.example.com/'
     },
@@ -61,7 +61,7 @@ module.exports = {
         //     filename: "[name].css",
         //     chunkFilename: "[id].css"
         // }),
-        new CleanWebpackPlugin(['build']),
+        new CleanWebpackPlugin(['dist']),
         new htmlWebpackPlugin({
             template: './src/index.html'
         })

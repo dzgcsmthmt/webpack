@@ -1,13 +1,16 @@
 import React,{ Component } from 'react';
 import Xhr from './xhr';
 import bgImg from '../img/1.jpg';
-import { ToastContainer, toast } from 'react-toastify';
+import Modal from './modal';
 import { square } from './math';
 
 export default class App extends Component{
     constructor(){
         super();
         this.clickHandler = this.clickHandler.bind(this);
+        this.onCloseModal = this.onCloseModal.bind(this);
+        this.onConfirm = this.onConfirm.bind(this);
+        this.state = {showModal: false};
     }
 
     componentDidMount(){
@@ -15,10 +18,22 @@ export default class App extends Component{
     }
 
     clickHandler(){
-        import('./print').then(module => {
-            var print = module.default;
-            print();
-        });
+        //loay loading
+        // import('./print').then(module => {
+        //     var print = module.default;
+        //     print();
+        // });
+        this.setState({showModal: !this.state.showModal});
+    }
+
+    onCloseModal(){
+        console.log('closed');
+        this.setState({showModal: false});
+    }
+
+    onConfirm(){
+        console.log('confirmed');
+        this.setState({showModal: false});
     }
 
     render(){
@@ -28,7 +43,12 @@ export default class App extends Component{
                 <Xhr ad="dd" />
                 <i className="iconfont">&#xe633;</i>
                 <a className="btn" onClick={this.clickHandler} >click</a>
-                <img src={bgImg} />
+                { this.state.showModal ?
+                    <Modal mask closeBtn
+                        onClose={this.onCloseModal}
+                        onConfirm={this.onConfirm}>
+                        <div>this is a modal</div>
+                    </Modal> : null }
             </React.Fragment>
         )
     }
