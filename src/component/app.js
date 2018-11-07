@@ -2,6 +2,7 @@ import React,{ Component } from 'react';
 import Xhr from './xhr';
 import bgImg from '../img/1.jpg';
 import Modal from './modal';
+import Calc from './calc';
 import { square } from './math';
 
 export default class App extends Component{
@@ -43,6 +44,7 @@ export default class App extends Component{
                 <Xhr ad="dd" />
                 <i className="iconfont">&#xe633;</i>
                 <a className="btn" onClick={this.clickHandler} >click</a>
+                <Calc />
                 { this.state.showModal ?
                     <Modal mask closeBtn
                         onClose={this.onCloseModal}
