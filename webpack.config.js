@@ -3,6 +3,8 @@ const htmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
+const InterpolateHtmlPlugin = require('interpolate-html-plugin');
 
 module.exports = {
     devtool: 'cheap-module-eval-source-map',
@@ -63,8 +65,27 @@ module.exports = {
         // }),
         new CleanWebpackPlugin(['dist']),
         new htmlWebpackPlugin({
-            template: './src/index.html'
-        })
+            template: './src/index.html',
+        }),
+        new InterpolateHtmlPlugin({
+            'PUBLIC_URL': 'dist'
+        }),
+        new CopyPlugin([
+         {
+           from: 'src/jquery.min.js',
+           to: './[name].[hash].[ext]',
+           transform(content, path) {
+               console.log('content',content + '---------------\r\n');
+               console.log('path',path + '---------------\r\n');
+              if (/\.[^\.]+$/.exec(path) == '.html') {
+                var allstr = content.toString().replace(/{vision}/g, Date.now())
+                return allstr
+              } else {
+                return content
+              }
+          },
+         },
+       ]),
     ],
     resolve: {
        extensions: ['.js','.jsx','.mjs']
