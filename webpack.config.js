@@ -1,4 +1,5 @@
 const path = require('path');
+const webpack = require('webpack');
 const htmlWebpackPlugin = require('html-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -64,14 +65,18 @@ module.exports = {
         //     filename: "[name].css",
         //     chunkFilename: "[id].css"
         // }),
-        new CleanWebpackPlugin(['dist']),
-        new MyPlugin(),
-        // new htmlWebpackPlugin({
-        //     template: './src/index.html',
-        // }),
-        // new InterpolateHtmlPlugin({
-        //     'PUBLIC_URL': 'dist'
-        // }),
+        // new CleanWebpackPlugin(['dist']),
+        // new MyPlugin(),
+        new htmlWebpackPlugin({
+            template: './src/index.html',
+        }),
+        new InterpolateHtmlPlugin({
+            'PUBLIC_URL': 'dist'
+        }),
+        new webpack.DllReferencePlugin({
+            context: '__dirname',
+            manifest: require('./dist/manifest.json'),
+        })
        //  new CopyPlugin([
        //   {
        //     from: 'src/jquery.min.js',
@@ -93,16 +98,16 @@ module.exports = {
        extensions: ['.js','.jsx','.mjs']
     },
     optimization: {
-        splitChunks: {
-            automaticNameDelimiter: '-',
-            cacheGroups: {
-                commons: {
-                    test: /[\\/]node_modules[\\/]/,
-                    name: true,
-                    chunks: 'all'
-                }
-            }
-        },
+        // splitChunks: {
+        //     automaticNameDelimiter: '-',
+        //     cacheGroups: {
+        //         commons: {
+        //             test: /[\\/]node_modules[\\/]/,
+        //             name: true,
+        //             chunks: 'all'
+        //         }
+        //     }
+        // },
         // minimizer: [
         //     new OptimizeCSSAssetsPlugin({})
         // ]
