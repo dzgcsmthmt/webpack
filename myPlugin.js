@@ -1,5 +1,11 @@
 class MyPlugin {
     apply(compiler) {
+        compiler.hooks.make.tap('MyPlugin',(compilation) => {
+            compilation.hooks.finishModules.tap('MyPlugin',(modules) =>{
+                console.log(modules[0]._source);
+            })
+        });
+
         compiler.hooks.emit.tap('MyPlugin', (compilation, entry) => {
             var keys = ["_buildingModules", "_modules", "_pluginCompat", "_preparedEntrypoints", "_rebuildingModules", "additionalChunkAssets",
             "assets", "bail", "cache", "children", "childrenCounters", "chunkGroups", "chunkTemplate", "chunks", "compilationDependencie",
@@ -25,7 +31,7 @@ class MyPlugin {
             // let module;
             // for (module of chunk._modules) {
             // console.log('module',Reflect.ownKeys(module));
-            console.log(compilation.modules[0].optimizationBailout);
+            // console.log(compilation.modules[0].optimizationBailout);
             Object.keys(compilation.modules[0]).forEach((key) => {
                 if(key == '_source'){
                     console.log('-------------------------------------\r')
