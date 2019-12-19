@@ -1,9 +1,33 @@
+var  axios = require('axios');
 class MyPlugin {
     apply(compiler) {
-        compiler.hooks.make.tap('MyPlugin',(compilation) => {
-            compilation.hooks.finishModules.tap('MyPlugin',(modules) =>{
+        // compiler.hooks.beforeCompile.tapAsync('MyPlugin', (params, callback) => {
+        //     console.log(Object.keys(params));
+        //     params['MyPlugin - data'] = 'important stuff my plugin will use later';
+        //     callback();
+        // });
+
+        compiler.hooks.compilation.tap('MyPlugin', (compilation) => {
+            var index = 0;
+            compilation.hooks.finishModules.tap('SourceMapDevToolModuleOptionsPlugin', modules => {
+                var keys = ['dependencies','blocks','variables','type','context','debugId','hash','renderedHash','resolveOptions',
+                            'factoryMeta','warnings','errors','buildMeta','buildInfo','reasons','_chunks','id','index','index2','depth','issuer',
+                            'profile','prefetched','built','used','usedExports','optimizationBailout','_rewriteChunkInReasons','useSourceMap',
+                            '_source','request','userRequest','rawRequest','binary','parser','generator','resource','matchResource',
+                            'loaders','error','_buildHash','buildTimestamp','_cachedSources','lineToLine','_lastSuccessfulBuildMeta'];
                 console.log(modules[0]._source);
-            })
+            });
+
+            compilation.hooks.additionalAssets.tapAsync('MyPlugin', callback => {
+                axios.get('https://img.shields.io/npm/v/webpack.svg').then(function(resp) {
+                    compilation.assets['webpack-version.svg'] = {
+                         source: () => resp.data,
+                         size: () => resp.data.length
+                     }
+                    callback();
+                })
+            });
+
         });
 
         compiler.hooks.emit.tap('MyPlugin', (compilation, entry) => {
@@ -14,7 +38,7 @@ class MyPlugin {
             "mainTemplate", "missingDependencies", "moduleTemplates", "modules", "name", "namedChunkGroups", "namedChunks",
             "options", "outputOptions", "performance", "profile", "records", "requestShortener", "resolverFactory",
             "runtimeTemplate", "semaphore", "usedChunkIds", "usedModuleIds", "warnings"]
-            // console.log(compilation.modules[0]);
+            //console.log(compilation.chunks.length);
             // console.log(compilation.modules[0]._chunks);
             // console.log(Object.keys(compilation.hooks));
             // for (var variable of compilation.modules[0]) {
@@ -37,7 +61,7 @@ class MyPlugin {
                     console.log('-------------------------------------\r')
                 }
                 // console.log(key,compilation.modules[0][key]);
-            });
+            //});
             // console.log('module',module.dependencies);
             // for(let dep of module.dependencies){
             //     console.log(Object.keys(dep));
